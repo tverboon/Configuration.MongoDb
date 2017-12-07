@@ -34,6 +34,6 @@
     </Target>
 
     <Target Name="Package">
-        <Exec Command='$(DotNetExe) pack "$(SolutionDir)src\Midmid.Configuration.MongoDb\Midmid.Configuration.MongoDb.csproj" --no-build --configuration $(Configuration) /p:PackageVersion=$(version) --output nupkg' />
+        <Exec Command='$(DotNetExe) pack "$(SolutionDir)src\Midmid.Configuration.MongoDb\Midmid.Configuration.MongoDb.csproj" --no-build --configuration $(Configuration) /p:PackageVersion=$(APPVEYOR_BUILD_VERSION) --output nupkg' />
     </Target>
 </Project>

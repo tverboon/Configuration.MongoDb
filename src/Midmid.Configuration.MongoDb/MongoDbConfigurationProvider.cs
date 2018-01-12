@@ -10,7 +10,6 @@ namespace Midmid.Configuration.MongoDb
         public MongoDbConfigurationProvider(MongoDbConfigurationSource source)
         {
             Source = source ?? throw new ArgumentNullException(nameof(source));
-            //Configure changetoken
 
             if (Source.ReloadOnChange && Source.ConfigurationReader != null)
             {
@@ -20,6 +19,8 @@ namespace Midmid.Configuration.MongoDb
                     {
                         Load(reload: true);
                     });
+                //Should be started in Watch()
+                Source.ConfigurationReader.ForceReload();
             }
         }
 
@@ -36,8 +37,8 @@ namespace Midmid.Configuration.MongoDb
             {
                 Data = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             }
-            //Add error handling
             Data = Source.ConfigurationReader?.GetAllConfiguration();
+
             OnReload();
         }
     }

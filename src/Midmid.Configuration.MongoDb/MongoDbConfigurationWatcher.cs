@@ -26,12 +26,15 @@ namespace Midmid.Configuration.MongoDb
             return _reloadToken;
         }
 
+        private Task RunTask { get; set; }
+
         public void Start()
         {
+            OnReload();
             if (IsStopped)
             {
                 IsStopped = false;
-                var t = RunLoop();
+                RunLoop();
             }
         }
 
@@ -46,7 +49,7 @@ namespace Midmid.Configuration.MongoDb
             previousToken.OnReload();
         }
 
-        private bool IsStopped { get; set; } = false;
+        private bool IsStopped { get; set; } = true;
 
         private async Task RunLoop()
         {

@@ -8,6 +8,7 @@ namespace Midmid.Configuration.MongoDb
     {
         private readonly IMongoDbReader _mongoDbReader;
         private readonly string _collectionName;
+        private MongoDbConfigurationWatcher _watcher;
 
         public MongoDbConfigurationReader(IMongoDbReader mongoDbReader, string collectionName)
         {
@@ -17,9 +18,13 @@ namespace Midmid.Configuration.MongoDb
 
         public IChangeToken Watch()
         {
-            var watcher = new MongoDbConfigurationWatcher(this);
-            watcher.Start();
-            return watcher.GetChangeToken();
+            _watcher = new MongoDbConfigurationWatcher(this);
+            return _watcher.GetChangeToken();
+        }
+
+        public void ForceReload()
+        {
+            _watcher.Start();
         }
 
         public Dictionary<string, string> GetAllConfiguration()

@@ -1,35 +1,44 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Primitives;
 
 namespace Midmid.Configuration.MongoDb
 {
     public class MongoDbConfigurationProvider : ConfigurationProvider
     {
-        private readonly IMongoDbReader _mongoDbReader;
-        private readonly string _collectionName;
-
-        public MongoDbConfigurationProvider(IMongoDbReader mongoDbReader, string collectionName)
+        public MongoDbConfigurationProvider(MongoDbConfigurationSource source)
         {
-            _mongoDbReader = mongoDbReader ?? throw new ArgumentNullException(nameof(mongoDbReader));
-            _collectionName = collectionName ?? throw new ArgumentNullException(nameof(collectionName));
+            Source = source ?? throw new ArgumentNullException(nameof(source));
+            //Configure changetoken
+
+            if (Source.ReloadOnChange && Source.ConfigurationReader != null)
+            {
+                ChangeToken.OnChange(
+                    () => Source.ConfigurationReader.Watch(),
+                    () =>
+                    {
+                        Load(reload: true);
+                    });
+            }
         }
+
+        private MongoDbConfigurationSource Source { get; }
 
         public override void Load()
         {
-            var data = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            string key, value;
-            var documents = _mongoDbReader.FindAll(_collectionName);
+            Load(reload: false);
+        }
 
-            foreach (var document in documents)
+        private void Load(bool reload)
+        {
+            if (reload)
             {
-                key = document[@"Key"].AsString;
-                value = document[@"Value"].AsString;
-
-                data[key] = value;
+                Data = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             }
-
-            Data = data;
+            //Add error handling
+            Data = Source.ConfigurationReader?.GetAllConfiguration();
+            OnReload();
         }
     }
 }

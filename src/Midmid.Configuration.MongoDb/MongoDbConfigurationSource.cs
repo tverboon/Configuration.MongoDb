@@ -4,13 +4,13 @@ namespace Midmid.Configuration.MongoDb
 {
     public class MongoDbConfigurationSource : IConfigurationSource
     {
-        public string CollectionName { get; set; }
+        public MongoDbConfigurationReader ConfigurationReader { get; set; }
 
-        public IMongoDbReader MongoDbReader { get; set; }
+        public bool ReloadOnChange { get; set; }
 
         public IConfigurationProvider Build(IConfigurationBuilder builder)
         {
-            return new MongoDbConfigurationProvider(MongoDbReader, CollectionName);
+            return new MongoDbConfigurationProvider(this);
         }
     }
 }

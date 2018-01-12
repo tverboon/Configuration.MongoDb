@@ -5,7 +5,7 @@ namespace Microsoft.Extensions.Configuration
 {
     public static class MongoDbConfigurationExtensions
     {
-        public static IConfigurationBuilder AddMongoDb(this IConfigurationBuilder configurationBuilder, string connectionString)
+        public static IConfigurationBuilder AddMongoDb(this IConfigurationBuilder configurationBuilder, string connectionString, bool reloadOnChange)
         {
             return AddMongoDb(configurationBuilder, new DefaultMongoDbReader(connectionString), "AppSettings");
         }
@@ -17,10 +17,14 @@ namespace Microsoft.Extensions.Configuration
 
         public static IConfigurationBuilder AddMongoDb(this IConfigurationBuilder configurationBuilder, IMongoDbReader mongoDbReader)
         {
-            return AddMongoDb(configurationBuilder, mongoDbReader, "AppSettings");
+            return AddMongoDb(configurationBuilder, mongoDbReader, "AppSettings", reloadOnChange);
         }
 
-        public static IConfigurationBuilder AddMongoDb(this IConfigurationBuilder configurationBuilder, IMongoDbReader mongoDbReader, string collectionName)
+        public static IConfigurationBuilder AddMongoDb(
+            this IConfigurationBuilder configurationBuilder,
+            IMongoDbReader mongoDbReader,
+            string collectionName,
+            bool reloadOnChange)
         {
             if (mongoDbReader == null)
             {
@@ -31,8 +35,12 @@ namespace Microsoft.Extensions.Configuration
             {
                 throw new ArgumentNullException(nameof(collectionName));
             }
-
-            configurationBuilder.Add(new MongoDbConfigurationSource { MongoDbReader = mongoDbReader, CollectionName = collectionName });
+            var source = new MongoDbConfigurationSource
+            {
+                ReloadOnChange = reloadOnChange,
+                ConfigurationReader = new MongoDbConfigurationReader(mongoDbReader, collectionName)
+            };
+            configurationBuilder.Add(source);
             return configurationBuilder;
         }
 

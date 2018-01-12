@@ -7,15 +7,15 @@ namespace Microsoft.Extensions.Configuration
     {
         public static IConfigurationBuilder AddMongoDb(this IConfigurationBuilder configurationBuilder, string connectionString, bool reloadOnChange)
         {
-            return AddMongoDb(configurationBuilder, new DefaultMongoDbReader(connectionString), "AppSettings");
+            return AddMongoDb(configurationBuilder, new DefaultMongoDbReader(connectionString), "AppSettings", reloadOnChange);
         }
 
-        public static IConfigurationBuilder AddMongoDb(this IConfigurationBuilder configurationBuilder, string connectionString, string collectionName)
+        public static IConfigurationBuilder AddMongoDb(this IConfigurationBuilder configurationBuilder, string connectionString, string collectionName, bool reloadOnChange)
         {
-            return AddMongoDb(configurationBuilder, new DefaultMongoDbReader(connectionString), collectionName);
+            return AddMongoDb(configurationBuilder, new DefaultMongoDbReader(connectionString), collectionName, reloadOnChange);
         }
 
-        public static IConfigurationBuilder AddMongoDb(this IConfigurationBuilder configurationBuilder, IMongoDbReader mongoDbReader)
+        public static IConfigurationBuilder AddMongoDb(this IConfigurationBuilder configurationBuilder, IMongoDbReader mongoDbReader, bool reloadOnChange)
         {
             return AddMongoDb(configurationBuilder, mongoDbReader, "AppSettings", reloadOnChange);
         }

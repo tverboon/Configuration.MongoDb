@@ -4,4 +4,4 @@
 
 [![Quality Gate](https://sonarcloud.io/api/badges/gate?key=midmid.configuration.mongodb)](https://sonarcloud.io/dashboard/index/midmid.configuration.mongodb)
 
-[<img src="https://{your-account}.visualstudio.com/_apis/public/build/definitions/{guid}/{id}/badge"/>](https://midmid.visualstudio.com/_apis/public/build/definitions/fb616497-b54d-4588-8fed-5e052bafe8df/14/badge)
+[<img src="https://midmid.visualstudio.com/_apis/public/build/definitions/fb616497-b54d-4588-8fed-5e052bafe8df/14/badge"/>](https://midmid.visualstudio.com/_apis/public/build/definitions/fb616497-b54d-4588-8fed-5e052bafe8df/14/badge)
